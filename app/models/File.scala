@@ -1,17 +1,30 @@
 package models
 
-import java.time.Instant
-import java.util.Date
+import java.io.InputStream
 
-import cn.playscala.mongo.annotations.Entity
-import javax.inject.Singleton
+import play.api.libs.Files
+import play.api.mvc.MultipartFormData
 
-@Singleton
-@Entity("file")
-case class File(id: Int,
-                name: String,
-                size: Float,
-                extension: String,
-                creationDate: Instant,
-                lastUpdate: Date,
-               )
+case class File(
+  name: String,
+  contentType: String,
+  inputStream: Option[InputStream],
+  size: Long,
+  absolutePath: Option[String],
+  userId: String
+) {
+
+  def getBucketPath(): String = {
+    s"${userId}/${name}"
+  }
+}
+
+object File {
+  def apply(formFile: MultipartFormData.FilePart[Files.TemporaryFile], userId: String): File = {
+    File(formFile.filename, formFile.contentType.getOrElse(""), inputStream = None, formFile.fileSize, Some(formFile.ref.getAbsolutePath), userId)
+  }
+
+  def destroy(): Unit = {
+
+  }
+}

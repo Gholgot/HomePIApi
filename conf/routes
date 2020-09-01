@@ -1,5 +1,8 @@
 GET /api/ping controllers.AuthController.ping
 
 
-POST /api/login controllers.AuthController.login
+POST /api/auth controllers.AuthController.authentificate
 POST /api/admin/user-create controllers.AuthController.createUserAsAdmin
+
+POST /api/file controllers.FileController.upload
+GET /api/file/:path controllers.FileController.ls(path: String)

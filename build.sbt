@@ -14,7 +14,10 @@ initialize ~= { _ =>
 libraryDependencies += guice
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test
 libraryDependencies += "cn.playscala" % "play-mongo_2.12" % "0.3.0"
+libraryDependencies += "io.minio" % "minio" % "7.1.0"
 libraryDependencies += "io.netty" % "netty-all" % "4.1.17.Final"
+PlayKeys.fileWatchService := play.dev.filewatch.FileWatchService.jdk7(play.sbt.run.toLoggerProxy(sLog.value))
+
 
 libraryDependencies ++= Seq(
   "com.pauldijou" %% "jwt-play" % "0.19.0",

@@ -1,7 +1,6 @@
 package models
 
 import java.time.Instant
-import java.util.UUID
 
 import cn.playscala.mongo.annotations.Entity
 import javax.inject.Singleton
@@ -11,14 +10,14 @@ import play.api.libs.json.{Json, Reads, Writes, __}
 
 @Singleton
 @Entity("user")
-case class User(_id: UUID,
-                _email: String,
-                name: String,
-                password: String,
-                creationDate: Instant,
-                lastUpdateDate: Instant)
+case class DBUser(_id: String,
+  _email: String,
+  name: String,
+  password: String,
+  creationDate: Instant,
+  lastUpdateDate: Instant)
 
-object User {
+object DBUser {
   val userRead: Reads[(String, String)] = (
     (__ \ "email").read[String] and
       (__ \ "password").read[String]

@@ -3,22 +3,22 @@ package dao
 import java.time.Instant
 import java.util.UUID
 
-import cn.playscala.mongo.Mongo
 import javax.inject.Inject
-import models.User
+import manager.DBManager
+import models.DBUser
+import play.api.libs.json.{JsObject, JsString}
+
 import scala.concurrent.ExecutionContext.Implicits.global
-
-
 import scala.concurrent.Future
 
-class UserDAO @Inject()(mongo: Mongo) {
-  def getUserByEmail(email: String): Future[Option[User]] = {
-    mongo.find[User]().first
+class UserDAO @Inject()(dbManager: DBManager) {
+  def getUserByEmail(email: String): Future[Option[DBUser]] = {
+    dbManager.findFirst[DBUser](JsObject(Seq("_email" -> JsString(email))))
   }
 
   def createUser(email: String, userName: String, password: String): Future[String] = {
     try {
-      mongo.insertOne[User](User(UUID.randomUUID(), email, userName, password, Instant.now(), Instant.now())).map { _ =>
+      dbManager.insert[DBUser](DBUser(UUID.randomUUID().toString, email, userName, password, Instant.now(), Instant.now())).map { _ =>
         s"${userName} has been created"
       }
     } catch {
