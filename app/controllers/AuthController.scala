@@ -4,9 +4,9 @@ import akka.stream.Materializer
 import com.typesafe.config.ConfigFactory
 import dao.UserDAO
 import javax.inject.{Inject, Singleton}
-import models.DBUser
-import models.DBUser.{userCreationRead, userRead}
-import play.api.mvc.{AbstractController, AnyContent, ControllerComponents, Request}
+import dbModels.DBUser.{userCreationRead, userRead}
+import dbModels.DBUser
+import play.api.mvc.{AbstractController, ControllerComponents}
 import utils.Auth
 import utils.Auth._
 

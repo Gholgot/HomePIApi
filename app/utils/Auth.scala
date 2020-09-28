@@ -2,7 +2,8 @@ package utils
 
 import com.typesafe.config.ConfigFactory
 import javax.inject.Inject
-import models.{Attrs, Context, DBUser}
+import models.{Attrs, Context}
+import dbModels.DBUser
 import pdi.jwt.{Jwt, JwtAlgorithm, JwtClaim}
 import play.api.libs.json.{JsSuccess, Json, Writes}
 import play.api.mvc.Results._

@@ -4,8 +4,8 @@ import java.time.Instant
 import java.util.UUID
 
 import javax.inject.Inject
-import manager.DBManager
-import models.DBUser
+import managers.DBManager
+import dbModels.DBUser
 import play.api.libs.json.{JsObject, JsString}
 
 import scala.concurrent.ExecutionContext.Implicits.global

@@ -2,10 +2,12 @@ package controllers
 
 import akka.stream.Materializer
 import dao.FileDAO
+import dbModels.DBFile
 import javax.inject.{Inject, Singleton}
-import models.{Attrs, DBFile}
-import play.api.mvc.{AbstractController, ControllerComponents}
-import play.libs.Json
+import models.Attrs
+import play.api.libs.Files
+import play.api.libs.json.{Json, Writes}
+import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents, MultipartFormData}
 import utils.Auth
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -19,22 +21,20 @@ class FileController @Inject()(cc: ControllerComponents,
 )
   extends AbstractController(cc) {
 
-  def ls(path: String) = authUtils.async(parse.defaultBodyParser) { req =>
+  def ls(path: String): Action[AnyContent] = authUtils.async(parse.defaultBodyParser) { req =>
     req.attrs.get(Attrs.Context) match {
       case Some(context) => {
         fileDAO.ls(path, context.id).map { fileList: List[DBFile] =>
-          fileList.map { file: DBFile =>
-            val json = DBFile.fileWrite.writes(file)
-            println(json)
-          }
+          Ok(Json.toJson(fileList))
+        }.recover {
+          case ex: Exception => InternalServerError(ex.getMessage)
         }
-        Future successful Ok("Done")
       }
       case _             => Future successful InternalServerError("No context")
     }
   }
 
-  def upload = authUtils.async(parse.multipartFormData) { req =>
+  def upload: Action[MultipartFormData[Files.TemporaryFile]] = authUtils.async(parse.multipartFormData) { req =>
     req.attrs.get(Attrs.Context) match {
       case Some(context) => {
         req.body.files.map(file => {
@@ -45,4 +45,15 @@ class FileController @Inject()(cc: ControllerComponents,
       case None          => Future successful InternalServerError("No context")
     }
   }
+
+  def delete = authUtils.async(parse.defaultBodyParser) { req =>
+    req.attrs.get(Attrs.Context) match {
+      case Some(context) => {
+        //! Here goes the delete call
+        Future successful Ok("")
+      }
+      case None          => Future successful InternalServerError("No context")
+    }
+  }
+
 }

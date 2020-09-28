@@ -1,13 +1,12 @@
 package dao
 
+import dbModels.DBFile
 import javax.inject.Inject
-import models.{DBFile, File}
+import managers.{BucketManager, DBManager}
+import models.File
 import play.api.libs.Files
 import play.api.mvc.MultipartFormData
-import manager.{BucketManager, DBManager}
-import play.libs.Json
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 

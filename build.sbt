@@ -1,5 +1,4 @@
 name := """HomePiApi"""
-organization := "com.example"
 
 version := "1.0"
 

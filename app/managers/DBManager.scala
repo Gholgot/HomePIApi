@@ -1,4 +1,4 @@
-package manager
+package managers
 
 import cn.playscala.mongo.Mongo
 import com.mongodb.client.result.{DeleteResult, UpdateResult}
