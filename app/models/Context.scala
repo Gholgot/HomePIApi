@@ -7,8 +7,6 @@ import play.api.libs.functional.syntax._
 import play.api.libs.typedmap.TypedKey
 
 case class Context(
-  exp: Int,
-  iat: Int,
   name: String,
   email: String,
   id: String
@@ -16,8 +14,6 @@ case class Context(
 
 object Context {
   val read: Reads[Context] = (
-    (__ \ "exp").read[Int] and
-      (__ \ "iat").read[Int] and
       (__ \ "name").read[String] and
       (__ \ "email").read[String] and
       (__ \ "id").read[String]

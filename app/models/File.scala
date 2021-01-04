@@ -11,20 +11,32 @@ case class File(
   inputStream: Option[InputStream],
   size: Long,
   absolutePath: Option[String],
-  userId: String
+  userId: String,
+  folderId: String
 ) {
 
   def getBucketPath(): String = {
-    s"${userId}/${name}"
+    s"${userId}/${folderId}~~${name}"
   }
 }
 
 object File {
-  def apply(formFile: MultipartFormData.FilePart[Files.TemporaryFile], userId: String): File = {
-    File(formFile.filename, formFile.contentType.getOrElse(""), inputStream = None, formFile.fileSize, Some(formFile.ref.getAbsolutePath), userId)
+  val defaultFolderId: String = "root"
+
+  def apply(formFile: MultipartFormData.FilePart[Files.TemporaryFile], userId: String, maybeFolderId: Option[String]): File = {
+    val folderId: String = maybeFolderId match {
+      case Some(folderIdString) => folderIdString
+      case None                 => defaultFolderId
+    }
+
+    File(formFile.filename, formFile.contentType.getOrElse(""), inputStream = None, formFile.fileSize, Some(formFile.ref.getAbsolutePath), userId, folderId)
   }
 
   def destroy(): Unit = {
 
+  }
+
+  def buildBucketPath(userId: String, folderId: String, fileName: String): String = {
+    s"${userId}/${folderId}~~${fileName}"
   }
 }

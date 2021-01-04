@@ -4,5 +4,6 @@ GET /api/ping controllers.AuthController.ping
 POST /api/auth controllers.AuthController.authentificate
 POST /api/admin/user-create controllers.AuthController.createUserAsAdmin
 
-POST /api/file controllers.FileController.upload
-GET /api/file/:path controllers.FileController.ls(path: String)
+POST /api/file controllers.FileController.upload(folderId: Option[String])
+GET /api/file controllers.FileController.ls(folderId: Option[String])
+DELETE /api/file controllers.FileController.delete(fileId: String, folderId: Option[String])

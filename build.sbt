@@ -1,4 +1,4 @@
-name := """HomePiApi"""
+name += """HomePiApi"""
 
 version := "1.0"
 
@@ -11,16 +11,16 @@ initialize ~= { _ =>
 }
 
 libraryDependencies += guice
-libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test
-libraryDependencies += "cn.playscala" % "play-mongo_2.12" % "0.3.0"
-libraryDependencies += "io.minio" % "minio" % "7.1.0"
-libraryDependencies += "io.netty" % "netty-all" % "4.1.17.Final"
+libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % Test
+libraryDependencies += "cn.playscala" % "play-mongo_2.12" % "0.3.1"
+libraryDependencies += "io.minio" % "minio" % "7.1.4"
+libraryDependencies += "io.netty" % "netty-all" % "4.1.34.Final"
 PlayKeys.fileWatchService := play.dev.filewatch.FileWatchService.jdk7(play.sbt.run.toLoggerProxy(sLog.value))
 
 
 libraryDependencies ++= Seq(
-  "com.pauldijou" %% "jwt-play" % "0.19.0",
-  "com.pauldijou" %% "jwt-core" % "0.19.0",
+  "com.pauldijou" %% "jwt-play" % "4.3.0",
+  "com.pauldijou" %% "jwt-core" % "4.3.0",
 )
 
 // Adds additional packages into Twirl

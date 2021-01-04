@@ -7,6 +7,7 @@ import javax.inject.{Inject, Singleton}
 import dbModels.DBUser.{userCreationRead, userRead}
 import dbModels.DBUser
 import play.api.mvc.{AbstractController, ControllerComponents}
+import play.api.libs.json._
 import utils.Auth
 import utils.Auth._
 
@@ -24,7 +25,7 @@ class AuthController @Inject()(cc: ControllerComponents,
     request.body.asOpt(userRead) match {
       case Some(userInfos: (String, String)) =>
         userDao.getUserByEmail(userInfos._1).map {
-          case Some(user: DBUser) => if (verifyUserCrendentials(user, userInfos)) Ok(createJWT(user)) else BadRequest("Wrong password")
+          case Some(user: DBUser) => if (verifyUserCrendentials(user, userInfos)) Ok(Json.toJson(createJWT(user))) else BadRequest("Wrong password")
           case None               => BadRequest("Wrong creadentials")
         }
       case None                              => Future successful BadRequest("Expecting application/json request body")

@@ -21,24 +21,22 @@ class FileController @Inject()(cc: ControllerComponents,
 )
   extends AbstractController(cc) {
 
-  def ls(path: String): Action[AnyContent] = authUtils.async(parse.defaultBodyParser) { req =>
+  def ls(folderId: Option[String]): Action[AnyContent] = authUtils.async(parse.defaultBodyParser) { req =>
     req.attrs.get(Attrs.Context) match {
       case Some(context) => {
-        fileDAO.ls(path, context.id).map { fileList: List[DBFile] =>
+        fileDAO.ls(folderId, context.id).map { fileList: List[DBFile] =>
           Ok(Json.toJson(fileList))
-        }.recover {
-          case ex: Exception => InternalServerError(ex.getMessage)
         }
       }
       case _             => Future successful InternalServerError("No context")
     }
   }
 
-  def upload: Action[MultipartFormData[Files.TemporaryFile]] = authUtils.async(parse.multipartFormData) { req =>
+  def upload(folderId: Option[String]): Action[MultipartFormData[Files.TemporaryFile]] = authUtils.async(parse.multipartFormData) { req =>
     req.attrs.get(Attrs.Context) match {
       case Some(context) => {
         req.body.files.map(file => {
-          fileDAO.add(file, context.id)
+          fileDAO.add(file, context.id, folderId)
         })
         Future successful Ok("Uploaded")
       }
@@ -46,11 +44,11 @@ class FileController @Inject()(cc: ControllerComponents,
     }
   }
 
-  def delete = authUtils.async(parse.defaultBodyParser) { req =>
+  def delete(fileId: String, folderId: Option[String]) = authUtils.async(parse.defaultBodyParser) { req =>
     req.attrs.get(Attrs.Context) match {
       case Some(context) => {
-        //! Here goes the delete call
-        Future successful Ok("")
+        fileDAO.remove(fileId, context.id, folderId)
+        Future successful Ok(fileId + " has been deleted")
       }
       case None          => Future successful InternalServerError("No context")
     }
