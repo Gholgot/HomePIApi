@@ -10,8 +10,7 @@ import models.File
 object Minio {
   lazy val client: MinioClient =
     MinioClient.builder().endpoint("http://192.168.1.30:9000/").credentials("minioadmin", "minioadmin").build()
-    //MinioClient.builder().endpoint("http://127.0.0.1:9000/").credentials("minioadmin", "minioadmin").build()
-
+    
   @throws[NoSuchAlgorithmException]
   @throws[IOException]
   @throws[InvalidKeyException]

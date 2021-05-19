@@ -1,17 +1,15 @@
 package dao
 
 import com.mongodb.client.result.{DeleteResult}
-import dbModels.DBFile
+import dbModels.{DBFile, DBHistory}
 import javax.inject.Inject
 import managers.{BucketManager, DBManager}
-import models.File
+import models.{File, HistoryAction}
 import play.api.libs.Files
 import play.api.mvc.MultipartFormData
 import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.libs.json.{JsObject}
-
 import scala.concurrent.Future
-
 
 class FileDAO @Inject()(dbManager: DBManager) {
   def add(file: MultipartFormData.FilePart[Files.TemporaryFile], userId: String, maybeFolderId: Option[String]): Unit = {
@@ -19,6 +17,8 @@ class FileDAO @Inject()(dbManager: DBManager) {
     BucketManager.upload(fileModel)
     val fileDB = DBFile.apply(fileModel, userId)
     dbManager.insert[DBFile](fileDB)
+    val dbHistory = DBHistory.apply(fileDB._id, HistoryAction.CREATE)
+    dbManager.insert[DBHistory](dbHistory)
   }
 
   def remove(fileId: String, userId: String, maybeFolderId: Option[String]): Unit = {
